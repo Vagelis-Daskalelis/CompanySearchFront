@@ -3,6 +3,8 @@ import { Employee, EmployeeUpdateDTO } from '../../models/employee';
 import { EmployeeService } from '../../services/employee.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Attribute } from '../../models/attribute';
+import { AttributeService } from '../../services/attribute.service';
 
 @Component({
   selector: 'app-employee',
@@ -22,7 +24,7 @@ export class EmployeeComponent {
   attributes: [] // Optional
 };
 
-  constructor(private employeeService: EmployeeService){}
+  constructor(private employeeService: EmployeeService, private attributeService: AttributeService){}
 
 
   isLoading = false;
@@ -129,10 +131,45 @@ editEmployee(emp: Employee): void {
 
   detailedEmployee: any = null;
 
+// viewEmployeeDetails(id: number): void {
+//   this.employeeService.getEmployeeById(id).subscribe({
+//     next: (employee) => {
+//       this.detailedEmployee = employee;
+//     },
+//     error: (err) => {
+//       console.error('Error fetching employee details:', err);
+//       this.detailedEmployee = null;
+//     }
+//   });
+// }
+
+closeDetails(): void {
+  this.detailedEmployee = null;
+}
+
+
+// Required data
+allAttributes: Attribute[] = [];
+selectedAttributeIdToInsert: number | null = null;
+
+// Fetch attributes to populate dropdown
+fetchAllAttributes(): void {
+  this.attributeService.getAttributes().subscribe({
+    next: (data) => {
+      this.allAttributes = data;
+    },
+    error: (err) => {
+      console.error('Error fetching attributes:', err);
+    }
+  });
+}
+
+// Call this after loading employee details
 viewEmployeeDetails(id: number): void {
   this.employeeService.getEmployeeById(id).subscribe({
     next: (employee) => {
       this.detailedEmployee = employee;
+      this.fetchAllAttributes(); // load dropdown options
     },
     error: (err) => {
       console.error('Error fetching employee details:', err);
@@ -141,8 +178,18 @@ viewEmployeeDetails(id: number): void {
   });
 }
 
-closeDetails(): void {
-  this.detailedEmployee = null;
+// Add attribute to employee
+addAttributeToEmployee(employeeId: number, attributeId: number | null): void {
+  if (!attributeId) return;
+
+  this.employeeService.addAttributeToEmployee(employeeId, attributeId).subscribe({
+    next: () => {
+      console.log(`Attribute ${attributeId} added to employee ${employeeId}`);
+      this.viewEmployeeDetails(employeeId); // Refresh details
+      this.selectedAttributeIdToInsert = null; // Reset
+    },
+    error: (err) => console.error('Error adding attribute:', err)
+  });
 }
 
 }

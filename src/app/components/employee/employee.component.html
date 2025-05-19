@@ -421,6 +421,27 @@
   </table>
 
   <!-- Selected Employee Details -->
+<!-- <div *ngIf="detailedEmployee" class="card mt-4 p-4 shadow-sm">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Employee Details (ID: {{ detailedEmployee.id }})</h5>
+    <button class="btn btn-sm btn-outline-secondary" (click)="closeDetails()">Close</button>
+  </div>
+
+  <p><strong>Name:</strong> {{ detailedEmployee.name }}</p>
+  <p><strong>Birthday:</strong> {{ detailedEmployee.birthday }}</p>
+  <p><strong>Has Car:</strong> {{ detailedEmployee.hasCar ? 'Yes' : 'No' }}</p>
+  <p><strong>Address:</strong> {{ detailedEmployee.address }}</p>
+
+  <p><strong>Attributes:</strong></p>
+  <ul *ngIf="detailedEmployee.attributes?.length > 0; else noDetailsAttr">
+    <li *ngFor="let attr of detailedEmployee.attributes">{{ attr }}</li>
+  </ul>
+  <ng-template #noDetailsAttr><em>No attributes</em></ng-template>
+</div> -->
+
+
+
+<!-- Selected Employee Details -->
 <div *ngIf="detailedEmployee" class="card mt-4 p-4 shadow-sm">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">Employee Details (ID: {{ detailedEmployee.id }})</h5>
@@ -437,4 +458,25 @@
     <li *ngFor="let attr of detailedEmployee.attributes">{{ attr }}</li>
   </ul>
   <ng-template #noDetailsAttr><em>No attributes</em></ng-template>
+
+  <!-- Insert Attribute Section -->
+  <div class="mt-4">
+    <h6>Add Attribute to Employee</h6>
+
+    <!-- Dropdown -->
+    <div class="input-group mb-3">
+      <select class="form-select" [(ngModel)]="selectedAttributeIdToInsert">
+        <option *ngFor="let attr of allAttributes" [value]="attr.id">
+          {{ attr.name }} ({{ attr.value }})
+        </option>
+      </select>
+      <button
+        class="btn btn-outline-success"
+        (click)="addAttributeToEmployee(detailedEmployee.id, selectedAttributeIdToInsert)"
+        [disabled]="!selectedAttributeIdToInsert"
+      >
+        Insert Attribute
+      </button>
+    </div>
+  </div>
 </div>

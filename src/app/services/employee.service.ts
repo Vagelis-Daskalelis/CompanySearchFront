@@ -34,4 +34,9 @@ createEmployee(employee: Omit<Employee, 'id'>): Observable<Employee> {
 getEmployeeById(id: number): Observable<Employee> {
   return this.http.get<Employee>(`${this.apiUrl}/employees/${id}`);
 }
+
+
+addAttributeToEmployee(employeeId: number, attributeId: number): Observable<void> {
+  return this.http.put<void>(`${this.apiUrl}/employee-attributes/update/${employeeId}/${attributeId}`, {});
+}
 }
