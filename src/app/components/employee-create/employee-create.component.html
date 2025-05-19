@@ -1,0 +1,29 @@
+<!-- Post Method -->
+
+
+<div class="container mt-4">
+  <h2>Add New Employee</h2>
+  <form (ngSubmit)="addEmployee()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input id="name" [(ngModel)]="newEmployee.name" name="name" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label for="birthday" class="form-label">Birthday</label>
+      <input id="birthday" type="date" [(ngModel)]="newEmployee.birthday" name="birthday" class="form-control" required />
+    </div>
+
+    <div class="form-check mb-3">
+      <input id="hasCar" type="checkbox" [(ngModel)]="newEmployee.hasCar" name="hasCar" class="form-check-input" />
+      <label for="hasCar" class="form-check-label">Has Car</label>
+    </div>
+
+    <div class="mb-3">
+      <label for="address" class="form-label">Address</label>
+      <input id="address" [(ngModel)]="newEmployee.address" name="address" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Create Employee</button>
+  </form>
+</div>

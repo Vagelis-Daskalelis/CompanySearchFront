@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2>Add New Attribute</h2>
+  <form (ngSubmit)="addAttribute()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input 
+        id="name" 
+        name="name" 
+        [(ngModel)]="newAttribute.name" 
+        class="form-control" 
+        required 
+        placeholder="Enter attribute name" 
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="value" class="form-label">Value</label>
+      <input 
+        id="value" 
+        name="value" 
+        [(ngModel)]="newAttribute.value" 
+        class="form-control" 
+        required 
+        placeholder="Enter attribute value" 
+      />
+    </div>
+
+    <button type="submit" class="btn btn-success">Add Attribute</button>
+  </form>
+</div>

@@ -1,0 +1,129 @@
+
+
+<div class="container mt-5">
+
+  <!-- Show form ONLY if editing -->
+  <div *ngIf="selectedAttribute">
+    <h2 class="mb-4 text-center">Update Attribute</h2>
+
+    <form (ngSubmit)="updateAttribute()" class="card p-4 shadow-sm mb-5">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label">Name</label>
+          <input
+            id="name"
+            type="text"
+            class="form-control"
+            name="name"
+            [(ngModel)]="attributeForm.name"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="value" class="form-label">Value</label>
+        <input
+          id="value"
+          type="text"
+          class="form-control"
+          name="value"
+          [(ngModel)]="attributeForm.value"
+        />
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-success">Update Attribute</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <h2>Attribute List</h2>
+
+  <button class="btn btn-primary mb-3" (click)="fetchAttributes()">Load Attributes</button>
+
+  <div *ngIf="isLoading" class="alert alert-info">Loading...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table *ngIf="attributes.length > 0" class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let atr of attributes">
+        <td>
+          <button class="btn btn-link p-0" (click)="viewAttributeDetails(atr.id)">
+            {{ atr.id }}
+          </button>
+        </td>
+        <td>{{ atr.name }}</td>
+        <td>
+          <button class="btn btn-outline-info btn-sm" (click)="getEmployeesByAttribute(atr.value)">
+            {{ atr.value }}
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-warning me-2" (click)="editAttribute(atr)">Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteAttribute(atr.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Selected Attribute Details -->
+  <div *ngIf="detailedAttribute" class="card mt-4 p-4 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Attribute Details (ID: {{ detailedAttribute.id }})</h5>
+      <button class="btn btn-sm btn-outline-secondary" (click)="closeDetails()">Close</button>
+    </div>
+
+    <p><strong>Name:</strong> {{ detailedAttribute.name }}</p>
+    <p><strong>Value:</strong> {{ detailedAttribute.value }}</p>
+  </div>
+
+  <!-- Employees with Selected Attribute -->
+<div *ngIf="employeesWithAttribute.length > 0" class="card mt-4 p-4 shadow">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Employees with Attribute: "{{ selectedAttributeValue }}"</h5>
+    <button class="btn btn-sm btn-outline-secondary" (click)="clearEmployeesWithAttribute()">Clear</button>
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead class="table-secondary">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Birthday</th>
+        <th>Has Car</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of employeesWithAttribute">
+        <td>{{ emp.id }}</td>
+        <td>{{ emp.name }}</td>
+        <td>{{ emp.birthday }}</td>
+        <td>
+          <span class="badge" [ngClass]="emp.hasCar ? 'bg-success' : 'bg-secondary'">
+            {{ emp.hasCar ? 'Yes' : 'No' }}
+          </span>
+        </td>
+        <td>{{ emp.address }}</td>
+        <td>
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="deleteEmployeeAttribute(emp.id, selectedAttributeId)">
+            Delete Attribute
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
