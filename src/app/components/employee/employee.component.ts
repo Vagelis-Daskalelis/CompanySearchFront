@@ -16,13 +16,7 @@ export class EmployeeComponent {
   employees: Employee[] = [];
 
 
-  newEmployee: Omit<Employee, 'id'> & { id?: number } = {
-  name: '',
-  birthday: '',
-  hasCar: false,
-  address: '',
-  attributes: [] // Optional
-};
+
 
   constructor(private employeeService: EmployeeService, private attributeService: AttributeService){}
 
@@ -32,43 +26,50 @@ export class EmployeeComponent {
 
   // Get all employees
 
+  // fetchEmployees(): void {
+  //   this.isLoading = true;
+  //   this.error = null;
+
+  //   this.employeeService.getEmployees().subscribe({
+  //     next: (data) => {
+  //       this.employees = data;
+  //       this.isLoading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching employees:', err);
+  //       this.error = 'Failed to load employees';
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
+
+
   fetchEmployees(): void {
-    this.isLoading = true;
-    this.error = null;
+  this.isLoading = true;
+  this.error = null;
 
-    this.employeeService.getEmployees().subscribe({
-      next: (data) => {
-        this.employees = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching employees:', err);
-        this.error = 'Failed to load employees';
-        this.isLoading = false;
-      }
-    });
-  }
+  this.employeeService.getEmployees().subscribe({
+    next: (data) => {
+      this.employees = data;
 
-  // Insert employee
+      // For each employee, fetch their attributes separately
+      this.employees.forEach(emp => {
+        this.employeeService.getAttributesByEmployee(emp.id!).subscribe(attrs => {
+          emp.attributes = attrs.map(a => `${a.name}: ${a.value}`);
+        });
+      });
 
-addEmployee(): void {
-    this.employeeService.createEmployee(this.newEmployee).subscribe({
-      next: (employee) => {
-        console.log('Employee created:', employee);
-        // Reset form
-        this.newEmployee = {
-          name: '',
-          birthday: '',
-          hasCar: false,
-          address: '',
-          attributes: []
-        };
-        // Optionally refresh employee list
-        this.fetchEmployees();
-      },
-      error: (err) => console.error('Error creating employee:', err)
-    });
-  }
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('Error fetching employees:', err);
+      this.error = 'Failed to load employees';
+      this.isLoading = false;
+    }
+  });
+}
+
+
 
   // Delete employee
 
@@ -152,24 +153,28 @@ closeDetails(): void {
 allAttributes: Attribute[] = [];
 selectedAttributeIdToInsert: number | null = null;
 
-// Fetch attributes to populate dropdown
+// Load all attributes once (for dropdown)
 fetchAllAttributes(): void {
-  this.attributeService.getAttributes().subscribe({
-    next: (data) => {
-      this.allAttributes = data;
-    },
-    error: (err) => {
-      console.error('Error fetching attributes:', err);
-    }
+  this.attributeService.getAttributes().subscribe(attrs => {
+    this.allAttributes = attrs;
   });
 }
 
-// Call this after loading employee details
+// Call onInit or when needed
+ngOnInit(): void {
+  this.fetchEmployees();
+  this.fetchAllAttributes();
+}
+
+// Load detailed employee + attributes
 viewEmployeeDetails(id: number): void {
   this.employeeService.getEmployeeById(id).subscribe({
-    next: (employee) => {
-      this.detailedEmployee = employee;
-      this.fetchAllAttributes(); // load dropdown options
+    next: (emp) => {
+      this.detailedEmployee = emp;
+      // Fetch attributes for this employee
+      this.employeeService.getAttributesByEmployee(id).subscribe(attrs => {
+        this.detailedEmployee!.attributes = attrs.map(a => `${a.name}: ${a.value}`);
+      });
     },
     error: (err) => {
       console.error('Error fetching employee details:', err);
@@ -178,19 +183,19 @@ viewEmployeeDetails(id: number): void {
   });
 }
 
-// Add attribute to employee
 addAttributeToEmployee(employeeId: number, attributeId: number | null): void {
   if (!attributeId) return;
-
   this.employeeService.addAttributeToEmployee(employeeId, attributeId).subscribe({
     next: () => {
-      console.log(`Attribute ${attributeId} added to employee ${employeeId}`);
-      this.viewEmployeeDetails(employeeId); // Refresh details
-      this.selectedAttributeIdToInsert = null; // Reset
+      // Refresh employee details and list
+      this.viewEmployeeDetails(employeeId);
+      this.fetchEmployees();
+      this.selectedAttributeIdToInsert = null;
     },
-    error: (err) => console.error('Error adding attribute:', err)
+    error: (err) => {
+      console.error('Error adding attribute:', err);
+    }
   });
 }
-
 }
 

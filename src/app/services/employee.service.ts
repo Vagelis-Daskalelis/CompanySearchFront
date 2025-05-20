@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Employee, EmployeeUpdateDTO} from '../models/employee';
+import { Attribute } from '../models/attribute';
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +39,12 @@ getEmployeeById(id: number): Observable<Employee> {
 
 addAttributeToEmployee(employeeId: number, attributeId: number): Observable<void> {
   return this.http.put<void>(`${this.apiUrl}/employee-attributes/update/${employeeId}/${attributeId}`, {});
+}
+
+
+// In your EmployeeService (or a relevant service)
+
+getAttributesByEmployee(employeeId: number): Observable<Attribute[]> {
+  return this.http.get<Attribute[]>(`${this.apiUrl}/employees-attributes/${employeeId}`);
 }
 }
