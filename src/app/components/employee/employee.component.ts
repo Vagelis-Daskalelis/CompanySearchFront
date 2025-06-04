@@ -26,24 +26,6 @@ export class EmployeeComponent {
 
   // Get all employees
 
-  // fetchEmployees(): void {
-  //   this.isLoading = true;
-  //   this.error = null;
-
-  //   this.employeeService.getEmployees().subscribe({
-  //     next: (data) => {
-  //       this.employees = data;
-  //       this.isLoading = false;
-  //     },
-  //     error: (err) => {
-  //       console.error('Error fetching employees:', err);
-  //       this.error = 'Failed to load employees';
-  //       this.isLoading = false;
-  //     }
-  //   });
-  // }
-
-
   fetchEmployees(): void {
   this.isLoading = true;
   this.error = null;
@@ -132,18 +114,6 @@ editEmployee(emp: Employee): void {
 
   detailedEmployee: any = null;
 
-// viewEmployeeDetails(id: number): void {
-//   this.employeeService.getEmployeeById(id).subscribe({
-//     next: (employee) => {
-//       this.detailedEmployee = employee;
-//     },
-//     error: (err) => {
-//       console.error('Error fetching employee details:', err);
-//       this.detailedEmployee = null;
-//     }
-//   });
-// }
-
 closeDetails(): void {
   this.detailedEmployee = null;
 }
@@ -160,11 +130,7 @@ fetchAllAttributes(): void {
   });
 }
 
-// Call onInit or when needed
-ngOnInit(): void {
-  this.fetchEmployees();
-  this.fetchAllAttributes();
-}
+
 
 // Load detailed employee + attributes
 viewEmployeeDetails(id: number): void {
@@ -183,6 +149,7 @@ viewEmployeeDetails(id: number): void {
   });
 }
 
+  // Adds attribute to employee
 addAttributeToEmployee(employeeId: number, attributeId: number | null): void {
   if (!attributeId) return;
   this.employeeService.addAttributeToEmployee(employeeId, attributeId).subscribe({

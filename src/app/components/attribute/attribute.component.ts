@@ -16,11 +16,6 @@ export class AttributeComponent {
  attributes: Attribute[] = [];
 
 
-//   newAttribute: Omit<Attribute, 'id'> & { id?: number } = {
-//   name: '',
-//   value: ''
-// };
-
   constructor(private attributeService: AttributeService){}
 
 
@@ -136,6 +131,7 @@ clearEmployeesWithAttribute(): void {
 
 selectedAttributeId: number = 0;
 
+// Gets all employees with the attribute value
 getEmployeesByAttribute(value: string): void {
   this.selectedAttributeValue = value;
   this.attributeService.getEmployeesByAttributeValue(value).subscribe({
@@ -153,7 +149,7 @@ getEmployeesByAttribute(value: string): void {
 }
 
 
-
+// Removes employee from attribute
 deleteEmployeeAttribute(employeeId: number, attributeId: number): void {
   this.attributeService.deleteEmployeeAttribute(employeeId, attributeId).subscribe({
     next: () => {

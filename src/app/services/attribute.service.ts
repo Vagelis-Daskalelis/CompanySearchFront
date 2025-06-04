@@ -13,9 +13,7 @@ export class AttributeService {
 
   constructor(private http: HttpClient) { }
 
-//   createAttribute(attribute: { name: string }): Observable<any> {
-//   return this.http.post<any>(this.apiUrl + '/attributes', attribute);
-// }
+
 
  // Get all attributes
   getAttributes(): Observable<Attribute[]> {
@@ -42,11 +40,12 @@ export class AttributeService {
     return this.http.delete<void>(`${this.apiUrl}/attributes/delete/${id}`);
   }
 
-
+  // get employees that have the attribute value
   getEmployeesByAttributeValue(value: string): Observable<Employee[]> {
   return this.http.get<Employee[]>(`${this.apiUrl}/employee-attributes/${value}`);
 }
 
+// removes the attribute from the employee
 deleteEmployeeAttribute(employeeId: number, attributeId: number): Observable<void> {
   return this.http.put<void>(`${this.apiUrl}/employee-attributes/delete/${employeeId}/${attributeId}`, {});
 }
